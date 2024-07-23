@@ -18,8 +18,8 @@ import (
 )
 
 var (
-	// TeleToken = os.Getenv("TELE_TOKEN")
-	TeleToken = goDotEnvVariable("TELE_TOKEN")
+	TeleToken = os.Getenv("TELE_TOKEN")
+	// TeleToken = goDotEnvVariable("TELE_TOKEN")
 )
 
 // kbotCmd represents the kbot command
@@ -51,8 +51,6 @@ to quickly create a Cobra application.`,
 			log.Print(ctx.Message().Payload, ctx.Text())
 
 			command := strings.Split(ctx.Text(), " ")
-
-			fmt.Println("Test: ", command[1])
 
 			switch command[0] {
 			case "/hello":
