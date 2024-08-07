@@ -1,12 +1,12 @@
 ifeq '$(findstring ;,$(PATH))' ';'
     DETECTED_OS := windows
-	DETECTED_ARCH := arm64
+	DETECTED_ARCH := amd64
 else
     DETECTED_OS := $(shell uname | tr '[:upper:]' '[:lower:]' 2> /dev/null || echo Unknown)
     DETECTED_OS := $(patsubst CYGWIN%,Cygwin,$(DETECTED_OS))
     DETECTED_OS := $(patsubst MSYS%,MSYS,$(DETECTED_OS))
     DETECTED_OS := $(patsubst MINGW%,MSYS,$(DETECTED_OS))
-	DETECTED_ARCH := $(shell dpkg --print-architecture 2>/dev/null || arm64)
+	DETECTED_ARCH := $(shell dpkg --print-architecture 2>/dev/null || amd64)
 endif
 
 APP_NAME=$(shell basename `git rev-parse --show-toplevel`)
@@ -40,7 +40,7 @@ push:
 
 linux: format get
 	CGO_ENABLED=0 GOOS=linux GOARCH=$(TARGET_ARCH) go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
-	docker build --build-arg TARGET_OS=linux --build-arg TARGET_ARCH=${TARGET_ARCH} -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(TARGET_ARCH) .
+	docker build --build-arg TARGET_OS=linux --build-arg TARGET_ARCH=${TARGET_ARCH} -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
 
 windows: format get
 	CGO_ENABLED=0 GOOS=windows GOARCH=$(DETECTED_ARCH) go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
