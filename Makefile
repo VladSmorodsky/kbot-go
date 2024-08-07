@@ -39,8 +39,8 @@ push:
 	docker push ${REGISTRY}/${APP_NAME}:${VERSION}-${TARGET_ARCH}
 
 linux: format get
-	CGO_ENABLED=0 GOOS=linux GOARCH=$(TARGET_ARCH) go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
-	docker build --build-arg TARGET_OS=linux --build-arg TARGET_ARCH=${TARGET_ARCH} -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
+	CGO_ENABLED=0 GOOS=linux GOARCH=$(DETECTED_ARCH) go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
+	docker build --build-arg TARGET_OS=linux --build-arg TARGET_ARCH=${DETECTED_ARCH} -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
 
 windows: format get
 	CGO_ENABLED=0 GOOS=windows GOARCH=$(DETECTED_ARCH) go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
@@ -55,4 +55,6 @@ arm: format get
 	docker build --build-arg TARGET_OS=arm -t ${REGISTRY}/${APP_NAME}:${VERSION}-arm .
 
 clean:
-	docker rmi ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH)
+	@rm -rf kbot; \
+	IMG1=$$(docker images -q | head -n 1); \
+	if [ -n "$${IMG1}" ]; then  docker rmi -f $${IMG1}; else printf "$RImage not found$D\n"; fi
