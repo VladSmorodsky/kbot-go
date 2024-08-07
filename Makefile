@@ -40,19 +40,19 @@ push:
 
 linux: format get
 	CGO_ENABLED=0 GOOS=linux GOARCH=$(DETECTED_ARCH) go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
-	docker build -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
+	docker build --build-arg TARGET_OS=linux --build-arg TARGET_ARCH=${TARGET_ARCH} -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
 
 windows: format get
 	CGO_ENABLED=0 GOOS=windows GOARCH=$(DETECTED_ARCH) go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
-	docker build --build-arg name=windows -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
+	docker build --build-arg TARGET_OS=windows --build-arg TARGET_ARCH=amd64 -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
 
 darwin:format get
 	CGO_ENABLED=0 GOOS=darwin GOARCH=$(DETECTED_ARCH) go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
-	docker build --build-arg name=darwin -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
+	docker build --build-arg TARGET_OS=darwin -t ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH) .
 
 arm: format get
 	CGO_ENABLED=0 GOOS=$(DETECTED_OS) GOARCH=arm go build -v -o kbot-go -ldflags "-X="github.com/VladSmorodsky/kbot-go/cmd.appVersion=${VERSION}
-	docker build --build-arg name=arm -t ${REGISTRY}/${APP_NAME}:${VERSION}-arm .
+	docker build --build-arg TARGET_OS=arm -t ${REGISTRY}/${APP_NAME}:${VERSION}-arm .
 
 clean:
 	docker rmi ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH)
