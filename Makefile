@@ -1,12 +1,12 @@
 ifeq '$(findstring ;,$(PATH))' ';'
     DETECTED_OS := windows
-	DETECTED_ARCH := amd64
+	DETECTED_ARCH := arm64
 else
     DETECTED_OS := $(shell uname | tr '[:upper:]' '[:lower:]' 2> /dev/null || echo Unknown)
     DETECTED_OS := $(patsubst CYGWIN%,Cygwin,$(DETECTED_OS))
     DETECTED_OS := $(patsubst MSYS%,MSYS,$(DETECTED_OS))
     DETECTED_OS := $(patsubst MINGW%,MSYS,$(DETECTED_OS))
-	DETECTED_ARCH := $(shell dpkg --print-architecture 2>/dev/null || amd64)
+	DETECTED_ARCH := $(shell dpkg --print-architecture 2>/dev/null || arm64)
 endif
 
 APP_NAME=$(shell basename `git rev-parse --show-toplevel`)
