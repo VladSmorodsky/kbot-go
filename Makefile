@@ -55,4 +55,4 @@ arm: format get
 	docker build --build-arg TARGET_OS=arm -t ${REGISTRY}/${APP_NAME}:${VERSION}-arm .
 
 clean:
-	docker rmi ${REGISTRY}/${APP_NAME}:${VERSION}-$(DETECTED_ARCH)
+	docker images -q | xargs docker rmi
